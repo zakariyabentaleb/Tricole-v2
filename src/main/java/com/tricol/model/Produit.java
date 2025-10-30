@@ -30,7 +30,7 @@ public class Produit {
     @Column(name = "stock_actuel")
     private int stockActuel;
 
+    @Column(name = "cout_moyen_unitaire")
     private double coutMoyenUnitaire;
-
 
 }

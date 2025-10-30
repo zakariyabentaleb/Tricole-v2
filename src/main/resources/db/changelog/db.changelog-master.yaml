@@ -68,3 +68,55 @@ databaseChangeLog:
             referencedColumnNames: id
             constraintName: fk_commandes_fournisseur
             onDelete: CASCADE
+
+  - changeSet:
+      id: 3
+      author: zak
+      validCheckSum: 'ANY'
+      changes:
+        - createTable:
+            tableName: produit
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: nom
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: VARCHAR(500)
+              - column:
+                  name: prix_unitaire
+                  type: DECIMAL(10,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: categorie
+                  type: VARCHAR(255)
+              - column:
+                  name: stock_actuel
+                  type: INT
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 4
+      author: zak
+      validCheckSum: 'ANY'
+      changes:
+        - addColumn:
+            tableName: produit
+            columns:
+              - column:
+                  name: cout_moyen_unitaire
+                  type: DECIMAL(10,2)
+                  constraints:
+                    nullable: false
+
