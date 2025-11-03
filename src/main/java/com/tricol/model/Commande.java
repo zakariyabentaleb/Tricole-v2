@@ -18,10 +18,11 @@ public class Commande {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name="dateCommande")
-    private LocalDateTime date;
+    @Column(name="date_commande")
+    private LocalDateTime dateCommande;
 
     private StatutCommande statut;
+    @Column(name="montant_total")
     private double montantTotal;
 
     @ManyToOne
