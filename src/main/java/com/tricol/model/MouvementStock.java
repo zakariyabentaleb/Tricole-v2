@@ -1,5 +1,6 @@
 package com.tricol.model;
 
+
 import com.tricol.enums.TypeMouvement;
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,7 +18,7 @@ public class MouvementStock {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private int id;
 
     private LocalDate dateMouvement;
 
@@ -26,8 +27,8 @@ public class MouvementStock {
 
     private int quantite;
 
-    // relation avec ligne commande
+    // relation avec commande
     @ManyToOne
-    @JoinColumn(name = "id_ligne_commande", nullable = false)
-    private CommandeLigne ligneCommande;
+    @JoinColumn(name = "id_commande", nullable = false)
+    private Commande commande;
 }

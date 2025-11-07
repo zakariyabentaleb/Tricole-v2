@@ -120,3 +120,96 @@ databaseChangeLog:
                   constraints:
                     nullable: false
 
+
+  - changeSet:
+      id: 6
+      author: zak
+      changes:
+        - createTable:
+            tableName: commandes_lignes
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: id_produit
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: id_commande
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: quantite
+                  type: INT
+                  defaultValueNumeric: 1
+              - column:
+                  name: prixAchat
+                  type: DECIMAL(10,2)
+                  defaultValueNumeric: 0.00
+        - addForeignKeyConstraint:
+            baseTableName: commandes_lignes
+            baseColumnNames: id_commande
+            referencedTableName: commandes
+            referencedColumnNames: id
+            constraintName: fk_commandes_lignes_commandes
+        - addForeignKeyConstraint:
+            baseTableName: commandes_lignes
+            baseColumnNames: id_produit
+            referencedTableName: produit
+            referencedColumnNames: id
+            constraintName: fk_commandes_lignes_produit
+
+
+  - changeSet:
+      id: 5
+      author: zak
+      changes:
+        - createTable:
+            tableName: mouvements_stock
+            columns:
+              - column:
+                  name: id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: date_mouvement
+                  type: DATE
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: type_mouvement
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: quantite
+                  type: INT
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: id_ligne_commande
+                  type: INT
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: mouvements_stock
+            baseColumnNames: id_ligne_commande
+            referencedTableName: commandes_lignes
+            referencedColumnNames: id
+            constraintName: fk_mouvementsStock_ligneCommande
+
