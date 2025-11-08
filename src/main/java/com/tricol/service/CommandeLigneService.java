@@ -29,9 +29,17 @@ public class CommandeLigneService {
         // Ensure valid paging params
         if (page < 0) page = 0;
         if (nbrElement <= 0) nbrElement = 10; // default page size
+
         Pageable pageable = PageRequest.of(page, nbrElement, Sort.by("id").ascending());
-        return commandeLigneRepository.findAll(pageable)
-                .map(commandeLigneMapper::toDTO);
+        Page<CommandeLigne> commandeLigne = commandeLigneRepository.findAll(pageable);
+        Page<CommandeLigneDTO> dto = commandeLigne.map(commandeLigneMapper::toDTO);
+        for(CommandeLigneDTO ligne : dto){
+            for(CommandeLigne cm : commandeLigne){
+                ligne.setCommandeId(cm.getCommande().getId());
+                ligne.setProduitId(cm.getProduit().getId());
+            }
+        }
+        return dto;
     }
 
     // GET by id

@@ -1,6 +1,7 @@
 package com.tricol.service;
 
 import com.tricol.dto.CommandeDTO;
+import com.tricol.dto.MouvementStockDTO;
 import com.tricol.enums.StatutCommande;
 import com.tricol.mapper.CommandeMapper;
 import com.tricol.model.Commande;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+
 @Service
 @RequiredArgsConstructor
 public class CommandeService {
@@ -26,6 +28,7 @@ public class CommandeService {
     private final FournisseurRepository fournisseurRepository;
     private final CommandeLigneRepository commandeLigneRepository;
     private final ProduitRepository produitRepository;
+    private final MouvementStockService mouvementStockService;
 
     //getAll commandes with pagination sorting by id ascending
     public Page<CommandeDTO> getAllCommandes(int page,int nbrElement){
@@ -33,7 +36,14 @@ public class CommandeService {
         if (nbrElement <= 0) nbrElement = 10; // default page size
         Pageable pageable= PageRequest.of(page,nbrElement, Sort.by("id").ascending());
         Page<Commande> commandes=commandeRepository.findAll(pageable);
-        return commandes.map(commandeMapper::toDTO);
+        Page<CommandeDTO> result = commandes.map(commandeMapper::toDTO);
+        for (CommandeDTO dto : result) {
+           for (Commande com : commandes) {
+               dto.setFournisseurId(com.getFournisseur().getId());
+            }
+        }
+
+        return result;
     }
 
     //getByid
@@ -48,10 +58,10 @@ public class CommandeService {
         Fournisseur fournisseur = fournisseurRepository
                 .findById(commandeDTO.getFournisseurId())
                 .orElseThrow(() -> new RuntimeException("Fournisseur introuvable"));
+
         Commande commande=commandeMapper.toEntity(commandeDTO);
         // Associer le fournisseur
         commande.setFournisseur(fournisseur);
-
         Commande saved=commandeRepository.save(commande);
 
         // Traiter livraison si le statut est LIVREE dès la création
@@ -101,5 +111,11 @@ public class CommandeService {
             produit.setStockActuel(stockRestant);
             produitRepository.save(produit);
         }
+        MouvementStockDTO mouvementDTO = MouvementStockDTO.builder()
+                .commandeId(commande.getId())
+                .typeMouvement(com.tricol.enums.TypeMouvement.ENTREE)
+                .build();
+
+        mouvementStockService.create(mouvementDTO);
     }
 }

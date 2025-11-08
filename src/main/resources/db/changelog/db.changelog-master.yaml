@@ -213,3 +213,58 @@ databaseChangeLog:
             referencedColumnNames: id
             constraintName: fk_mouvementsStock_ligneCommande
 
+
+  - changeSet:
+      id: 7
+      author: zak
+      changes:
+
+        # 1 - Supprimer l’ancienne table
+        - dropTable:
+            tableName: mouvements_stock
+            cascadeConstraints: true
+
+        # 2 - Recréer la table proprement
+        - createTable:
+            tableName: mouvements_stock
+            columns:
+              - column:
+                  name: id
+                  type: SERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: id_commande
+                  type: INT
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: type_mouvement
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: quantite
+                  type: INT
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: date_mouvement
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+
+        # 3 - Ajout de la foreign key
+        - addForeignKeyConstraint:
+            baseTableName: mouvements_stock
+            baseColumnNames: id_commande
+            referencedTableName: commandes
+            referencedColumnNames: id
+            constraintName: fk_mouvementsStock_commande
+
+

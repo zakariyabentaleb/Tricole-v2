@@ -26,7 +26,13 @@ public class MouvementStockService {
     public Page<MouvementStockDTO> getAll(int page, int size){
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
         Page<MouvementStock> mouvements = mouvementStockRepository.findAll(pageable);
-        return mouvements.map(mouvementStockMapper::toDTO);
+        Page<MouvementStockDTO> dto = mouvements.map(mouvementStockMapper::toDTO);
+        for (MouvementStockDTO msdto : dto ){
+            for (MouvementStock ms : mouvements ){
+                msdto.setCommandeId(ms.getCommande().getId());
+            }
+        }
+        return dto;
     }
 
     // GET by ID

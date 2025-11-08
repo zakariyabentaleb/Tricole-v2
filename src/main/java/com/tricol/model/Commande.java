@@ -21,7 +21,9 @@ public class Commande {
     @Column(name="date_commande")
     private LocalDateTime dateCommande;
 
+    @Enumerated(EnumType.STRING)
     private StatutCommande statut;
+
     @Column(name="montant_total")
     private double montantTotal;
 
